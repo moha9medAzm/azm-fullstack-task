@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: SQLite has no native enum type, so Prisma requires these columns to be
+// `String`. Valid values are enforced at the application layer — see
+// src/types/enums.ts (source of truth) and each module's Zod schemas.
+//
+//   Role:            ADMIN | AGENT
+//   Ticket.status:   OPEN | IN_PROGRESS | PENDING | RESOLVED | CLOSED
+//   Ticket.priority: LOW | MEDIUM | HIGH | URGENT
+//   Ticket.category: GENERAL | TECHNICAL | BILLING | ACCOUNT | FEATURE_REQUEST
+//   Ticket.channel:  WEB | EMAIL | PHONE | CHAT | WHATSAPP | SMS
+//   TicketEvent.type: CREATED | STATUS_CHANGED | PRIORITY_CHANGED | ASSIGNED |
+//                     UNASSIGNED | ESCALATED | COMMENTED |
+//                     SLA_RESPONSE_BREACHED | SLA_RESOLUTION_BREACHED | REOPENED
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("AGENT")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  assignedTickets Ticket[]        @relation("TicketAssignee")
+  createdTickets  Ticket[]        @relation("TicketCreator")
+  comments        TicketComment[]
+  events          TicketEvent[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  company   String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tickets Ticket[]
+
+  @@index([company])
+}
+
+model Ticket {
+  id          String  @id @default(cuid())
+  reference   String  @unique
+  subject     String
+  description String
+  status      String  @default("OPEN")
+  priority    String  @default("MEDIUM")
+  category    String  @default("GENERAL")
+  channel     String  @default("WEB")
+  isEscalated Boolean @default(false)
+
+  slaResponseDueAt   DateTime
+  slaResolutionDueAt DateTime
+  firstRespondedAt   DateTime?
+  resolvedAt         DateTime?
+  closedAt           DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  assigneeId String?
+  assignee   User?   @relation("TicketAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  createdById String
+  createdBy   User   @relation("TicketCreator", fields: [createdById], references: [id])
+
+  comments TicketComment[]
+  events   TicketEvent[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([assigneeId])
+  @@index([customerId])
+  @@index([slaResolutionDueAt])
+}
+
+model TicketComment {
+  id         String   @id @default(cuid())
+  ticketId   String
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id])
+  body       String
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([ticketId])
+}
+
+model TicketEvent {
+  id        String   @id @default(cuid())
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  type      String
+  field     String?
+  fromValue String?
+  toValue   String?
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([ticketId])
+  @@index([type])
+}

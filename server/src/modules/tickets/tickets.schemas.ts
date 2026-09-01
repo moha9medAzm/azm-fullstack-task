@@ -53,6 +53,7 @@ export const listTicketsQuerySchema = paginationSchema.extend({
   assigneeId: z.string().min(1).optional(),
   customerId: z.string().min(1).optional(),
   mine: boolFromQuery,
+  unassigned: boolFromQuery,
   breaching: boolFromQuery,
   q: z.string().trim().max(200).optional(),
   sort: z

@@ -132,6 +132,7 @@ export async function listTickets(
   if (query.customerId) where.customerId = query.customerId;
   if (query.assigneeId) where.assigneeId = query.assigneeId;
   if (query.mine) where.assigneeId = actor.id;
+  if (query.unassigned) where.assigneeId = null;
   if (query.q) {
     where.OR = [
       { subject: { contains: query.q } },

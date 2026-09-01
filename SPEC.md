@@ -192,7 +192,7 @@ Base path `/api`. JSON only. Auth via `Authorization: Bearer <jwt>` except
 **Users** (ADMIN only, except `GET /users`)
 | Method | Path          | Role         | Notes                                        |
 |--------|---------------|--------------|----------------------------------------------|
-| GET    | `/users`      | ADMIN, AGENT | list active users (for assignment dropdown)  |
+| GET    | `/users`      | ADMIN, AGENT | AGENT sees active users only (assignment dropdown); ADMIN sees all, incl. deactivated |
 | POST   | `/users`      | ADMIN        | `{ name, email, password, role }`            |
 | PATCH  | `/users/:id`  | ADMIN        | `{ name?, role?, isActive?, password? }`     |
 

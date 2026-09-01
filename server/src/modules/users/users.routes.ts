@@ -13,14 +13,14 @@ export const usersRouter = Router();
 
 usersRouter.use(authenticate);
 
-// Any authenticated user can list active users — needed for assignment pickers.
+// Any authenticated user can list users — agents need active ones for
+// assignment pickers; admins manage the roster and also need to see
+// deactivated accounts to reactivate them.
 usersRouter.get(
   '/',
-  asyncHandler(async (_req, res) => {
-    const users = await prisma.user.findMany({
-      where: { isActive: true },
-      orderBy: { name: 'asc' },
-    });
+  asyncHandler(async (req, res) => {
+    const where = req.user!.role === 'ADMIN' ? {} : { isActive: true };
+    const users = await prisma.user.findMany({ where, orderBy: { name: 'asc' } });
     res.json({ data: users.map(toPublicUser) });
   }),
 );

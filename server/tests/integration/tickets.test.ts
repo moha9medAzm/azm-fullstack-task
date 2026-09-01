@@ -245,6 +245,15 @@ describe('GET /api/tickets — list, filter, sort, paginate', () => {
     expect(desc.body.data.map((t: { priority: string }) => t.priority)).toEqual(['URGENT', 'MEDIUM', 'LOW']);
   });
 
+  it('supports `unassigned=true`', async () => {
+    await createTicket({ assigneeId: agent.user.id });
+    const unassigned = await createTicket();
+
+    const res = await api.get('/api/tickets?unassigned=true').set(...agent.auth);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].id).toBe(unassigned.id);
+  });
+
   it('supports `mine=true`', async () => {
     await createTicket({ assigneeId: agent.user.id });
     await createTicket({ assigneeId: otherAgent.user.id });

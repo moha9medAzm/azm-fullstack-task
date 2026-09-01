@@ -47,6 +47,16 @@ describe('users', () => {
     expect(res.body.user.isActive).toBe(false);
   });
 
+  it('hides deactivated users from an agent but shows them to an admin', async () => {
+    const deactivated = await makeUser('AGENT', { isActive: false });
+
+    const asAgent = await api.get('/api/users').set(...agent.auth);
+    expect(asAgent.body.data.map((u: { id: string }) => u.id)).not.toContain(deactivated.user.id);
+
+    const asAdmin = await api.get('/api/users').set(...admin.auth);
+    expect(asAdmin.body.data.map((u: { id: string }) => u.id)).toContain(deactivated.user.id);
+  });
+
   it('rejects a duplicate email with 409', async () => {
     const res = await api
       .post('/api/users')

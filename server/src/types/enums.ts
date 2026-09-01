@@ -28,6 +28,7 @@ export type TicketChannel = (typeof TICKET_CHANNELS)[number];
 
 export const TICKET_EVENT_TYPES = [
   'CREATED',
+  'UPDATED',
   'STATUS_CHANGED',
   'PRIORITY_CHANGED',
   'ASSIGNED',

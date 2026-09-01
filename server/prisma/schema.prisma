@@ -16,8 +16,8 @@ datasource db {
 //   Ticket.priority: LOW | MEDIUM | HIGH | URGENT
 //   Ticket.category: GENERAL | TECHNICAL | BILLING | ACCOUNT | FEATURE_REQUEST
 //   Ticket.channel:  WEB | EMAIL | PHONE | CHAT | WHATSAPP | SMS
-//   TicketEvent.type: CREATED | STATUS_CHANGED | PRIORITY_CHANGED | ASSIGNED |
-//                     UNASSIGNED | ESCALATED | COMMENTED |
+//   TicketEvent.type: CREATED | UPDATED | STATUS_CHANGED | PRIORITY_CHANGED |
+//                     ASSIGNED | UNASSIGNED | ESCALATED | COMMENTED |
 //                     SLA_RESPONSE_BREACHED | SLA_RESOLUTION_BREACHED | REOPENED
 
 model User {

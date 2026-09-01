@@ -5,6 +5,7 @@ A working, end-to-end slice of the Customer Support CRM: the **core support loop
 role-based access control, request validation, an immutable audit log, background
 SLA automation, a test suite, and a React agent console.
 
+- **How to run it (step-by-step + troubleshooting):** [RUNNING.md](RUNNING.md)
 - **Requirements, assumptions, API contract, acceptance criteria:** [SPEC.md](SPEC.md)
 - **Architecture and the task-by-task build plan:** [PLAN.md](PLAN.md)
 

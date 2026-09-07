@@ -20,7 +20,16 @@ describe('LoginPage', () => {
   it('logs in and lands on the protected home route', async () => {
     globalThis.fetch = mockFetchOnce({
       'POST /api/auth/login': () => ({
-        body: { token: 'fake-jwt', user: { id: '1', name: 'Alice Chen', email: 'alice@example.com', role: 'AGENT', isActive: true } },
+        body: {
+          token: 'fake-jwt',
+          user: {
+            id: '1',
+            name: 'Alice Chen',
+            email: 'alice@example.com',
+            role: 'AGENT',
+            isActive: true,
+          },
+        },
       }),
     });
 

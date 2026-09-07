@@ -12,12 +12,7 @@ export class AppError extends Error {
   readonly details?: ErrorDetail[];
   readonly expose: boolean;
 
-  constructor(
-    status: number,
-    code: string,
-    message: string,
-    details?: ErrorDetail[],
-  ) {
+  constructor(status: number, code: string, message: string, details?: ErrorDetail[]) {
     super(message);
     this.name = new.target.name;
     this.status = status;

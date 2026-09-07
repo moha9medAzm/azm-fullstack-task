@@ -57,6 +57,13 @@ export const listTicketsQuerySchema = paginationSchema.extend({
   breaching: boolFromQuery,
   q: z.string().trim().max(200).optional(),
   sort: z
-    .enum(['createdAt', '-createdAt', 'priority', '-priority', 'slaResolutionDueAt', '-slaResolutionDueAt'])
+    .enum([
+      'createdAt',
+      '-createdAt',
+      'priority',
+      '-priority',
+      'slaResolutionDueAt',
+      '-slaResolutionDueAt',
+    ])
     .default('-createdAt'),
 });

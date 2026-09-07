@@ -10,7 +10,13 @@ export type TicketStatus = (typeof TICKET_STATUSES)[number];
 export const TICKET_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const;
 export type TicketPriority = (typeof TICKET_PRIORITIES)[number];
 
-export const TICKET_CATEGORIES = ['GENERAL', 'TECHNICAL', 'BILLING', 'ACCOUNT', 'FEATURE_REQUEST'] as const;
+export const TICKET_CATEGORIES = [
+  'GENERAL',
+  'TECHNICAL',
+  'BILLING',
+  'ACCOUNT',
+  'FEATURE_REQUEST',
+] as const;
 export type TicketCategory = (typeof TICKET_CATEGORIES)[number];
 
 export const TICKET_CHANNELS = ['WEB', 'EMAIL', 'PHONE', 'CHAT', 'WHATSAPP', 'SMS'] as const;
@@ -46,7 +52,9 @@ export type Customer = {
   notes: string | null;
   createdAt: string;
   updatedAt: string;
-  tickets?: Array<Pick<Ticket, 'id' | 'reference' | 'subject' | 'status' | 'priority' | 'createdAt'>>;
+  tickets?: Array<
+    Pick<Ticket, 'id' | 'reference' | 'subject' | 'status' | 'priority' | 'createdAt'>
+  >;
 };
 
 export type TicketComment = {

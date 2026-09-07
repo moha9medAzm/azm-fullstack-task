@@ -6,7 +6,10 @@ beforeEach(resetDb);
 
 describe('POST /api/auth/login', () => {
   it('logs in with correct credentials', async () => {
-    const { user, password } = await makeUser('AGENT', { email: 'agent@example.com', password: 'Secret123!' });
+    const { user, password } = await makeUser('AGENT', {
+      email: 'agent@example.com',
+      password: 'Secret123!',
+    });
     const res = await api.post('/api/auth/login').send({ email: user.email, password });
     expect(res.status).toBe(200);
     expect(res.body.token).toEqual(expect.any(String));
@@ -15,14 +18,19 @@ describe('POST /api/auth/login', () => {
   });
 
   it('rejects a wrong password with 401 and the standard error shape', async () => {
-    const { user } = await makeUser('AGENT', { email: 'agent2@example.com', password: 'Secret123!' });
+    const { user } = await makeUser('AGENT', {
+      email: 'agent2@example.com',
+      password: 'Secret123!',
+    });
     const res = await api.post('/api/auth/login').send({ email: user.email, password: 'wrong' });
     expect(res.status).toBe(401);
     expect(res.body.error.code).toBe('UNAUTHENTICATED');
   });
 
   it('rejects an unknown email the same way as a wrong password', async () => {
-    const res = await api.post('/api/auth/login').send({ email: 'nobody@example.com', password: 'whatever' });
+    const res = await api
+      .post('/api/auth/login')
+      .send({ email: 'nobody@example.com', password: 'whatever' });
     expect(res.status).toBe(401);
     expect(res.body.error.code).toBe('UNAUTHENTICATED');
   });

@@ -23,7 +23,8 @@ export function slaTone(remainingMs: number, totalMs: number, breached: boolean)
 }
 
 export function resolutionSla(ticket: Ticket) {
-  const totalMs = new Date(ticket.slaResolutionDueAt).getTime() - new Date(ticket.createdAt).getTime();
+  const totalMs =
+    new Date(ticket.slaResolutionDueAt).getTime() - new Date(ticket.createdAt).getTime();
   return {
     tone: slaTone(ticket.slaResolutionRemainingMs, totalMs, ticket.slaResolutionBreached),
     breached: ticket.slaResolutionBreached,
@@ -31,7 +32,8 @@ export function resolutionSla(ticket: Ticket) {
 }
 
 export function responseSla(ticket: Ticket) {
-  const totalMs = new Date(ticket.slaResponseDueAt).getTime() - new Date(ticket.createdAt).getTime();
+  const totalMs =
+    new Date(ticket.slaResponseDueAt).getTime() - new Date(ticket.createdAt).getTime();
   return {
     tone: slaTone(ticket.slaResponseRemainingMs, totalMs, ticket.slaResponseBreached),
     breached: ticket.slaResponseBreached,

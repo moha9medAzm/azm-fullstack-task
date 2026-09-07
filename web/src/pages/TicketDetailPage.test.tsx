@@ -63,13 +63,34 @@ describe('TicketDetailPage', () => {
       }
       if (url.pathname === '/api/tickets/t1/comments' && method === 'POST') {
         commentPosted = true;
-        return json({ comment: { id: 'cm1', body: 'On it', isInternal: false, author: { id: 'u1', name: 'Alice' }, createdAt: now } }, 201);
+        return json(
+          {
+            comment: {
+              id: 'cm1',
+              body: 'On it',
+              isInternal: false,
+              author: { id: 'u1', name: 'Alice' },
+              createdAt: now,
+            },
+          },
+          201,
+        );
       }
       if (url.pathname === '/api/tickets/t1') {
         const comments = commentPosted
-          ? [{ id: 'cm1', body: 'On it', isInternal: false, author: { id: 'u1', name: 'Alice' }, createdAt: now }]
+          ? [
+              {
+                id: 'cm1',
+                body: 'On it',
+                isInternal: false,
+                author: { id: 'u1', name: 'Alice' },
+                createdAt: now,
+              },
+            ]
           : [];
-        return json({ ticket: baseTicket({ comments, firstRespondedAt: commentPosted ? now : null }) });
+        return json({
+          ticket: baseTicket({ comments, firstRespondedAt: commentPosted ? now : null }),
+        });
       }
       throw new Error(`Unhandled request: ${method} ${url.pathname}`);
     });
@@ -95,5 +116,8 @@ describe('TicketDetailPage', () => {
 });
 
 function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json' },
+  });
 }

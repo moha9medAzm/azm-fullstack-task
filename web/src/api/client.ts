@@ -78,7 +78,8 @@ export async function apiFetch<T>(path: string, opts: RequestOptions = {}): Prom
 }
 
 export const api = {
-  get: <T>(path: string, query?: RequestOptions['query']) => apiFetch<T>(path, { method: 'GET', query }),
+  get: <T>(path: string, query?: RequestOptions['query']) =>
+    apiFetch<T>(path, { method: 'GET', query }),
   post: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: 'POST', body }),
   patch: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: 'PATCH', body }),
   delete: <T>(path: string) => apiFetch<T>(path, { method: 'DELETE' }),

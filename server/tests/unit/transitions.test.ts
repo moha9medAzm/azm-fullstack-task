@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { assertTransition, isTransitionAllowed, isReopen } from '../../src/modules/tickets/transitions';
+import {
+  assertTransition,
+  isTransitionAllowed,
+  isReopen,
+} from '../../src/modules/tickets/transitions';
 import { TICKET_STATUSES, type TicketStatus } from '../../src/types/enums';
 
 describe('ticket status transitions', () => {

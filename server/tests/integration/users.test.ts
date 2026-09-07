@@ -32,7 +32,12 @@ describe('users', () => {
     const res = await api
       .post('/api/users')
       .set(...admin.auth)
-      .send({ name: 'New Agent', email: 'new2@example.com', password: 'Password123!', role: 'AGENT' });
+      .send({
+        name: 'New Agent',
+        email: 'new2@example.com',
+        password: 'Password123!',
+        role: 'AGENT',
+      });
     expect(res.status).toBe(201);
     expect(res.body.user.email).toBe('new2@example.com');
   });

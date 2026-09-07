@@ -14,7 +14,14 @@ beforeEach(async () => {
   customerId = customer.id;
 });
 
-async function makeOverdueTicket(overrides: Partial<{ priority: string; firstRespondedAt: Date | null; resolvedAt: Date | null; isEscalated: boolean }> = {}) {
+async function makeOverdueTicket(
+  overrides: Partial<{
+    priority: string;
+    firstRespondedAt: Date | null;
+    resolvedAt: Date | null;
+    isEscalated: boolean;
+  }> = {},
+) {
   const past = new Date(Date.now() - 60_000);
   return prisma.ticket.create({
     data: {
@@ -44,7 +51,9 @@ describe('runSlaSweep', () => {
     const second = await runSlaSweep({ now });
     expect(second.responseBreachesFlagged).toBe(0);
 
-    const events = await prisma.ticketEvent.findMany({ where: { ticketId: ticket.id, type: 'SLA_RESPONSE_BREACHED' } });
+    const events = await prisma.ticketEvent.findMany({
+      where: { ticketId: ticket.id, type: 'SLA_RESPONSE_BREACHED' },
+    });
     expect(events).toHaveLength(1);
   });
 
@@ -64,12 +73,17 @@ describe('runSlaSweep', () => {
     const second = await runSlaSweep({ now });
     expect(second.resolutionBreachesEscalated).toBe(0);
 
-    const escalatedEvents = await prisma.ticketEvent.findMany({ where: { ticketId: ticket.id, type: 'ESCALATED' } });
+    const escalatedEvents = await prisma.ticketEvent.findMany({
+      where: { ticketId: ticket.id, type: 'ESCALATED' },
+    });
     expect(escalatedEvents).toHaveLength(1);
   });
 
   it('does not touch a ticket that is already resolved or already escalated', async () => {
-    const resolved = await makeOverdueTicket({ resolvedAt: new Date(), firstRespondedAt: new Date() });
+    const resolved = await makeOverdueTicket({
+      resolvedAt: new Date(),
+      firstRespondedAt: new Date(),
+    });
     const escalated = await makeOverdueTicket({ isEscalated: true, firstRespondedAt: new Date() });
 
     const result = await runSlaSweep({ now: new Date() });

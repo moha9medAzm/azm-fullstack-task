@@ -21,7 +21,9 @@ customersRouter.get(
   '/',
   validate({ query: listCustomersQuerySchema }),
   asyncHandler(async (req, res) => {
-    const { page, pageSize, q } = req.valid.query as ReturnType<typeof listCustomersQuerySchema.parse>;
+    const { page, pageSize, q } = req.valid.query as ReturnType<
+      typeof listCustomersQuerySchema.parse
+    >;
     const where = q
       ? {
           OR: [
@@ -34,7 +36,11 @@ customersRouter.get(
       : {};
 
     const [data, total] = await Promise.all([
-      prisma.customer.findMany({ where, orderBy: { createdAt: 'desc' }, ...skipTake(page, pageSize) }),
+      prisma.customer.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        ...skipTake(page, pageSize),
+      }),
       prisma.customer.count({ where }),
     ]);
 

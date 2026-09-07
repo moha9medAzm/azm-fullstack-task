@@ -22,7 +22,12 @@ export function CustomerDetailPage() {
   const c = customer.data!;
 
   function startEdit() {
-    setDraft({ name: c.name, phone: c.phone ?? '', company: c.company ?? '', notes: c.notes ?? '' });
+    setDraft({
+      name: c.name,
+      phone: c.phone ?? '',
+      company: c.company ?? '',
+      notes: c.notes ?? '',
+    });
     setEditing(true);
   }
 
@@ -32,7 +37,8 @@ export function CustomerDetailPage() {
   }
 
   async function handleDelete() {
-    if (!confirm(`Delete ${c.name}? This is only possible once all their tickets are closed.`)) return;
+    if (!confirm(`Delete ${c.name}? This is only possible once all their tickets are closed.`))
+      return;
     try {
       await deleteCustomer.mutateAsync(c.id);
       navigate('/customers');
@@ -46,7 +52,12 @@ export function CustomerDetailPage() {
       <div className="page-header">
         <h1>{c.name}</h1>
         {user?.role === 'ADMIN' && (
-          <button type="button" className="btn btn-danger" onClick={handleDelete} disabled={deleteCustomer.isPending}>
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={handleDelete}
+            disabled={deleteCustomer.isPending}
+          >
             Delete
           </button>
         )}
@@ -67,23 +78,41 @@ export function CustomerDetailPage() {
           <div className="form-card">
             <label className="field">
               <span>Name</span>
-              <input value={draft.name} onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))} />
+              <input
+                value={draft.name}
+                onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+              />
             </label>
             <label className="field">
               <span>Phone</span>
-              <input value={draft.phone} onChange={(e) => setDraft((d) => ({ ...d, phone: e.target.value }))} />
+              <input
+                value={draft.phone}
+                onChange={(e) => setDraft((d) => ({ ...d, phone: e.target.value }))}
+              />
             </label>
             <label className="field">
               <span>Company</span>
-              <input value={draft.company} onChange={(e) => setDraft((d) => ({ ...d, company: e.target.value }))} />
+              <input
+                value={draft.company}
+                onChange={(e) => setDraft((d) => ({ ...d, company: e.target.value }))}
+              />
             </label>
             <label className="field">
               <span>Notes</span>
-              <textarea rows={4} value={draft.notes} onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))} />
+              <textarea
+                rows={4}
+                value={draft.notes}
+                onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
+              />
             </label>
             {updateCustomer.isError && <ErrorBanner error={updateCustomer.error} />}
             <div className="comment-form-actions">
-              <button type="button" className="btn btn-primary" onClick={saveEdit} disabled={updateCustomer.isPending}>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={saveEdit}
+                disabled={updateCustomer.isPending}
+              >
                 Save
               </button>
               <button type="button" className="btn btn-ghost" onClick={() => setEditing(false)}>
@@ -118,7 +147,8 @@ export function CustomerDetailPage() {
               </Link>
               <span className="muted">
                 {' '}
-                · <StatusBadge status={t.status} /> <PriorityBadge priority={t.priority} /> · {formatDateTime(t.createdAt)}
+                · <StatusBadge status={t.status} /> <PriorityBadge priority={t.priority} /> ·{' '}
+                {formatDateTime(t.createdAt)}
               </span>
             </li>
           ))}

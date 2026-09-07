@@ -64,7 +64,10 @@ export function TicketsListPage() {
           onChange={(e) => setQ(e.target.value)}
         />
 
-        <select value={params.get('status') ?? ''} onChange={(e) => updateParam('status', e.target.value || null)}>
+        <select
+          value={params.get('status') ?? ''}
+          onChange={(e) => updateParam('status', e.target.value || null)}
+        >
           <option value="">All statuses</option>
           {TICKET_STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -73,7 +76,10 @@ export function TicketsListPage() {
           ))}
         </select>
 
-        <select value={params.get('priority') ?? ''} onChange={(e) => updateParam('priority', e.target.value || null)}>
+        <select
+          value={params.get('priority') ?? ''}
+          onChange={(e) => updateParam('priority', e.target.value || null)}
+        >
           <option value="">All priorities</option>
           {TICKET_PRIORITIES.map((p) => (
             <option key={p} value={p}>
@@ -82,7 +88,10 @@ export function TicketsListPage() {
           ))}
         </select>
 
-        <select value={params.get('category') ?? ''} onChange={(e) => updateParam('category', e.target.value || null)}>
+        <select
+          value={params.get('category') ?? ''}
+          onChange={(e) => updateParam('category', e.target.value || null)}
+        >
           <option value="">All categories</option>
           {TICKET_CATEGORIES.map((c) => (
             <option key={c} value={c}>
@@ -91,7 +100,10 @@ export function TicketsListPage() {
           ))}
         </select>
 
-        <select value={params.get('assigneeId') ?? ''} onChange={(e) => updateParam('assigneeId', e.target.value || null)}>
+        <select
+          value={params.get('assigneeId') ?? ''}
+          onChange={(e) => updateParam('assigneeId', e.target.value || null)}
+        >
           <option value="">Any assignee</option>
           {users.data?.map((u) => (
             <option key={u.id} value={u.id}>
@@ -127,7 +139,10 @@ export function TicketsListPage() {
           Breaching SLA
         </label>
 
-        <select value={params.get('sort') ?? '-createdAt'} onChange={(e) => updateParam('sort', e.target.value)}>
+        <select
+          value={params.get('sort') ?? '-createdAt'}
+          onChange={(e) => updateParam('sort', e.target.value)}
+        >
           <option value="-createdAt">Newest first</option>
           <option value="createdAt">Oldest first</option>
           <option value="-priority">Priority: high to low</option>
@@ -173,7 +188,9 @@ export function TicketsListPage() {
                     </td>
                     <td>
                       {t.subject}
-                      {t.isEscalated && <span className="badge badge-red escalated-tag">Escalated</span>}
+                      {t.isEscalated && (
+                        <span className="badge badge-red escalated-tag">Escalated</span>
+                      )}
                     </td>
                     <td>{t.customer.name}</td>
                     <td>
@@ -182,7 +199,9 @@ export function TicketsListPage() {
                     <td>
                       <PriorityBadge priority={t.priority} />
                     </td>
-                    <td>{t.assignee ? t.assignee.name : <span className="muted">Unassigned</span>}</td>
+                    <td>
+                      {t.assignee ? t.assignee.name : <span className="muted">Unassigned</span>}
+                    </td>
                     <td className="muted">{formatRelative(t.createdAt)}</td>
                   </tr>
                 ))}

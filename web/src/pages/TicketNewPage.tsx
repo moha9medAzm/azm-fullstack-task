@@ -112,13 +112,20 @@ export function TicketNewPage() {
                 value={newCustomer.email}
                 onChange={(e) => setNewCustomer((s) => ({ ...s, email: e.target.value }))}
               />
-              <button type="button" className="btn" onClick={handleCreateCustomer} disabled={createCustomer.isPending}>
+              <button
+                type="button"
+                className="btn"
+                onClick={handleCreateCustomer}
+                disabled={createCustomer.isPending}
+              >
                 Add customer
               </button>
               {createCustomer.isError && <ErrorBanner error={createCustomer.error} />}
             </div>
           )}
-          {selectedCustomerId && <p className="muted">Selected customer id: {selectedCustomerId}</p>}
+          {selectedCustomerId && (
+            <p className="muted">Selected customer id: {selectedCustomerId}</p>
+          )}
         </div>
 
         <div className="field-row">
@@ -170,7 +177,11 @@ export function TicketNewPage() {
 
         {createTicket.isError && <ErrorBanner error={createTicket.error} />}
 
-        <button type="submit" className="btn btn-primary" disabled={isSubmitting || createTicket.isPending}>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          disabled={isSubmitting || createTicket.isPending}
+        >
           {createTicket.isPending ? 'Creating…' : 'Create ticket'}
         </button>
       </form>

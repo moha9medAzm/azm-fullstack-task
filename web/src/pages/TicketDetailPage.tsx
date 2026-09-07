@@ -15,7 +15,12 @@ import { StatusBadge, PriorityBadge, SlaBadge } from '../components/Badge';
 import { EventLine } from '../components/EventLine';
 import { formatDateTime, formatRelative, titleCase } from '../lib/format';
 import { resolutionSla, responseSla, SLA_TONE_LABEL } from '../lib/sla';
-import { TICKET_CATEGORIES, TICKET_CHANNELS, TICKET_PRIORITIES, TICKET_STATUSES } from '../api/types';
+import {
+  TICKET_CATEGORIES,
+  TICKET_CHANNELS,
+  TICKET_PRIORITIES,
+  TICKET_STATUSES,
+} from '../api/types';
 
 export function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -68,11 +73,19 @@ export function TicketDetailPage() {
           <span className="muted">{t.reference}</span>
           {editingSubject ? (
             <div className="inline-edit">
-              <input value={subjectDraft} onChange={(e) => setSubjectDraft(e.target.value)} autoFocus />
+              <input
+                value={subjectDraft}
+                onChange={(e) => setSubjectDraft(e.target.value)}
+                autoFocus
+              />
               <button type="button" className="btn" onClick={saveSubject}>
                 Save
               </button>
-              <button type="button" className="btn btn-ghost" onClick={() => setEditingSubject(false)}>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => setEditingSubject(false)}
+              >
                 Cancel
               </button>
             </div>
@@ -121,10 +134,18 @@ export function TicketDetailPage() {
               />
               <div className="comment-form-actions">
                 <label className="checkbox-field">
-                  <input type="checkbox" checked={isInternal} onChange={(e) => setIsInternal(e.target.checked)} />
+                  <input
+                    type="checkbox"
+                    checked={isInternal}
+                    onChange={(e) => setIsInternal(e.target.checked)}
+                  />
                   Internal note (not visible to customer)
                 </label>
-                <button type="submit" className="btn btn-primary" disabled={addComment.isPending || !commentBody.trim()}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={addComment.isPending || !commentBody.trim()}
+                >
                   {addComment.isPending ? 'Posting…' : 'Post'}
                 </button>
               </div>
@@ -151,7 +172,11 @@ export function TicketDetailPage() {
               <span>Status</span>
               <select
                 value={t.status}
-                onChange={(e) => updateTicket.mutate({ status: e.target.value as (typeof TICKET_STATUSES)[number] })}
+                onChange={(e) =>
+                  updateTicket.mutate({
+                    status: e.target.value as (typeof TICKET_STATUSES)[number],
+                  })
+                }
               >
                 {TICKET_STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -166,7 +191,11 @@ export function TicketDetailPage() {
               <span>Priority</span>
               <select
                 value={t.priority}
-                onChange={(e) => updateTicket.mutate({ priority: e.target.value as (typeof TICKET_PRIORITIES)[number] })}
+                onChange={(e) =>
+                  updateTicket.mutate({
+                    priority: e.target.value as (typeof TICKET_PRIORITIES)[number],
+                  })
+                }
               >
                 {TICKET_PRIORITIES.map((p) => (
                   <option key={p} value={p}>
@@ -181,7 +210,11 @@ export function TicketDetailPage() {
               <span>Category</span>
               <select
                 value={t.category}
-                onChange={(e) => updateTicket.mutate({ category: e.target.value as (typeof TICKET_CATEGORIES)[number] })}
+                onChange={(e) =>
+                  updateTicket.mutate({
+                    category: e.target.value as (typeof TICKET_CATEGORIES)[number],
+                  })
+                }
               >
                 {TICKET_CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -195,7 +228,11 @@ export function TicketDetailPage() {
               <span>Channel</span>
               <select
                 value={t.channel}
-                onChange={(e) => updateTicket.mutate({ channel: e.target.value as (typeof TICKET_CHANNELS)[number] })}
+                onChange={(e) =>
+                  updateTicket.mutate({
+                    channel: e.target.value as (typeof TICKET_CHANNELS)[number],
+                  })
+                }
               >
                 {TICKET_CHANNELS.map((c) => (
                   <option key={c} value={c}>
@@ -207,7 +244,10 @@ export function TicketDetailPage() {
 
             <label className="field">
               <span>Assignee</span>
-              <select value={t.assigneeId ?? ''} onChange={(e) => assignTicket.mutate(e.target.value || null)}>
+              <select
+                value={t.assigneeId ?? ''}
+                onChange={(e) => assignTicket.mutate(e.target.value || null)}
+              >
                 <option value="">Unassigned</option>
                 {users.data?.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -231,17 +271,27 @@ export function TicketDetailPage() {
             <h2>SLA</h2>
             <div className="sla-row">
               <span>First response</span>
-              <SlaBadge tone={response.tone} label={t.firstRespondedAt ? 'Responded' : SLA_TONE_LABEL[response.tone]} />
+              <SlaBadge
+                tone={response.tone}
+                label={t.firstRespondedAt ? 'Responded' : SLA_TONE_LABEL[response.tone]}
+              />
             </div>
             <p className="muted">
-              {t.firstRespondedAt ? `Responded ${formatRelative(t.firstRespondedAt)}` : `Due ${formatRelative(t.slaResponseDueAt)}`}
+              {t.firstRespondedAt
+                ? `Responded ${formatRelative(t.firstRespondedAt)}`
+                : `Due ${formatRelative(t.slaResponseDueAt)}`}
             </p>
             <div className="sla-row">
               <span>Resolution</span>
-              <SlaBadge tone={resolution.tone} label={t.resolvedAt ? 'Resolved' : SLA_TONE_LABEL[resolution.tone]} />
+              <SlaBadge
+                tone={resolution.tone}
+                label={t.resolvedAt ? 'Resolved' : SLA_TONE_LABEL[resolution.tone]}
+              />
             </div>
             <p className="muted">
-              {t.resolvedAt ? `Resolved ${formatRelative(t.resolvedAt)}` : `Due ${formatRelative(t.slaResolutionDueAt)}`}
+              {t.resolvedAt
+                ? `Resolved ${formatRelative(t.resolvedAt)}`
+                : `Due ${formatRelative(t.slaResolutionDueAt)}`}
             </p>
           </section>
 

@@ -128,13 +128,23 @@ export function CustomersListPage() {
           </div>
 
           <div className="pagination">
-            <button type="button" className="btn" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <button
+              type="button"
+              className="btn"
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
               Previous
             </button>
             <span>
               Page {page} of {totalPages} ({customers.data.total} total)
             </span>
-            <button type="button" className="btn" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
+            <button
+              type="button"
+              className="btn"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => p + 1)}
+            >
               Next
             </button>
           </div>

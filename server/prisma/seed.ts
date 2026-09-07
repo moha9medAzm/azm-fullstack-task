@@ -46,18 +46,56 @@ async function main() {
   const agents = [alice, bob];
 
   const customerSeed = [
-    { name: 'Grace Hopper', email: 'grace@compugroup.example', company: 'CompuGroup', phone: '+1-202-555-0101' },
-    { name: 'Ada Lovelace', email: 'ada@analyticalworks.example', company: 'Analytical Works', phone: '+1-202-555-0102' },
-    { name: 'Linus Torvalds', email: 'linus@kernelco.example', company: 'Kernel Co', phone: '+1-202-555-0103' },
-    { name: 'Margaret Hamilton', email: 'margaret@aptech.example', company: 'Apollo Tech', phone: '+1-202-555-0104' },
-    { name: 'Katherine Johnson', email: 'katherine@orbitals.example', company: 'Orbitals Inc', phone: '+1-202-555-0105' },
-    { name: 'Tim Berners-Lee', email: 'tim@webfoundation.example', company: 'Web Foundation', phone: '+1-202-555-0106' },
-    { name: 'Radia Perlman', email: 'radia@netlayer.example', company: 'NetLayer', phone: '+1-202-555-0107' },
-    { name: 'Sami Al-Amin', email: 'sami@nileretail.example', company: 'Nile Retail', phone: '+20-2-555-0108' },
+    {
+      name: 'Grace Hopper',
+      email: 'grace@compugroup.example',
+      company: 'CompuGroup',
+      phone: '+1-202-555-0101',
+    },
+    {
+      name: 'Ada Lovelace',
+      email: 'ada@analyticalworks.example',
+      company: 'Analytical Works',
+      phone: '+1-202-555-0102',
+    },
+    {
+      name: 'Linus Torvalds',
+      email: 'linus@kernelco.example',
+      company: 'Kernel Co',
+      phone: '+1-202-555-0103',
+    },
+    {
+      name: 'Margaret Hamilton',
+      email: 'margaret@aptech.example',
+      company: 'Apollo Tech',
+      phone: '+1-202-555-0104',
+    },
+    {
+      name: 'Katherine Johnson',
+      email: 'katherine@orbitals.example',
+      company: 'Orbitals Inc',
+      phone: '+1-202-555-0105',
+    },
+    {
+      name: 'Tim Berners-Lee',
+      email: 'tim@webfoundation.example',
+      company: 'Web Foundation',
+      phone: '+1-202-555-0106',
+    },
+    {
+      name: 'Radia Perlman',
+      email: 'radia@netlayer.example',
+      company: 'NetLayer',
+      phone: '+1-202-555-0107',
+    },
+    {
+      name: 'Sami Al-Amin',
+      email: 'sami@nileretail.example',
+      company: 'Nile Retail',
+      phone: '+20-2-555-0108',
+    },
   ];
-  const customers = await Promise.all(
-    customerSeed.map((c) => prisma.customer.create({ data: c })),
-  );
+  const customers = await Promise.all(customerSeed.map((c) => prisma.customer.create({ data: c })));
 
   const subjects = [
     'Cannot reset my password',
@@ -78,7 +116,13 @@ async function main() {
   ];
 
   const priorities: TicketPriority[] = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
-  const categories: TicketCategory[] = ['GENERAL', 'TECHNICAL', 'BILLING', 'ACCOUNT', 'FEATURE_REQUEST'];
+  const categories: TicketCategory[] = [
+    'GENERAL',
+    'TECHNICAL',
+    'BILLING',
+    'ACCOUNT',
+    'FEATURE_REQUEST',
+  ];
   const channels: TicketChannel[] = ['WEB', 'EMAIL', 'PHONE', 'CHAT', 'WHATSAPP', 'SMS'];
 
   let refCounter = 1;
@@ -103,13 +147,43 @@ async function main() {
     { ageHours: 100, priority: 'MEDIUM', status: 'RESOLVED', assigned: true, responded: true },
     { ageHours: 90, priority: 'MEDIUM', status: 'CLOSED', assigned: true, responded: true },
     { ageHours: 80, priority: 'HIGH', status: 'IN_PROGRESS', assigned: true, responded: true },
-    { ageHours: 76, priority: 'HIGH', status: 'PENDING', assigned: true, responded: true, breachResolution: true },
-    { ageHours: 70, priority: 'URGENT', status: 'IN_PROGRESS', assigned: true, responded: true, breachResolution: true, escalated: true },
-    { ageHours: 60, priority: 'MEDIUM', status: 'OPEN', assigned: false, responded: false, breachResponse: true },
+    {
+      ageHours: 76,
+      priority: 'HIGH',
+      status: 'PENDING',
+      assigned: true,
+      responded: true,
+      breachResolution: true,
+    },
+    {
+      ageHours: 70,
+      priority: 'URGENT',
+      status: 'IN_PROGRESS',
+      assigned: true,
+      responded: true,
+      breachResolution: true,
+      escalated: true,
+    },
+    {
+      ageHours: 60,
+      priority: 'MEDIUM',
+      status: 'OPEN',
+      assigned: false,
+      responded: false,
+      breachResponse: true,
+    },
     { ageHours: 50, priority: 'LOW', status: 'OPEN', assigned: true, responded: true },
     { ageHours: 40, priority: 'MEDIUM', status: 'IN_PROGRESS', assigned: true, responded: true },
     { ageHours: 30, priority: 'HIGH', status: 'OPEN', assigned: false, responded: false },
-    { ageHours: 20, priority: 'URGENT', status: 'OPEN', assigned: false, responded: false, breachResponse: true, breachResolution: true },
+    {
+      ageHours: 20,
+      priority: 'URGENT',
+      status: 'OPEN',
+      assigned: false,
+      responded: false,
+      breachResponse: true,
+      breachResolution: true,
+    },
     { ageHours: 15, priority: 'LOW', status: 'PENDING', assigned: true, responded: true },
     { ageHours: 10, priority: 'MEDIUM', status: 'OPEN', assigned: true, responded: false },
     { ageHours: 8, priority: 'HIGH', status: 'IN_PROGRESS', assigned: true, responded: true },
@@ -141,7 +215,8 @@ async function main() {
     if (plan.breachResolution) slaResolutionDueAt = hoursAgo(0.1);
 
     const firstRespondedAt = plan.responded ? new Date(createdAt.getTime() + 20 * 60_000) : null;
-    const resolvedAt = plan.status === 'RESOLVED' || plan.status === 'CLOSED' ? hoursAgo(plan.ageHours / 3) : null;
+    const resolvedAt =
+      plan.status === 'RESOLVED' || plan.status === 'CLOSED' ? hoursAgo(plan.ageHours / 3) : null;
     const closedAt = plan.status === 'CLOSED' ? hoursAgo(plan.ageHours / 4) : null;
 
     const ticket = await prisma.ticket.create({
@@ -203,7 +278,13 @@ async function main() {
     }
     if (plan.escalated) {
       await prisma.ticketEvent.create({
-        data: { ticketId: ticket.id, type: 'ESCALATED', field: 'priority', toValue: plan.priority, createdAt: hoursAgo(plan.ageHours / 2) },
+        data: {
+          ticketId: ticket.id,
+          type: 'ESCALATED',
+          field: 'priority',
+          toValue: plan.priority,
+          createdAt: hoursAgo(plan.ageHours / 2),
+        },
       });
     }
   }

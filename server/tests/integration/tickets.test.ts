@@ -18,7 +18,12 @@ async function createTicket(overrides: Record<string, unknown> = {}) {
   const res = await api
     .post('/api/tickets')
     .set(...agent.auth)
-    .send({ subject: 'Cannot log in', description: 'Getting a 500 error', customerId, ...overrides });
+    .send({
+      subject: 'Cannot log in',
+      description: 'Getting a 500 error',
+      customerId,
+      ...overrides,
+    });
   expect(res.status).toBe(201);
   return res.body.ticket as {
     id: string;
@@ -151,8 +156,14 @@ describe('PATCH /api/tickets/:id — status transitions', () => {
 
   it('reopening a CLOSED ticket clears resolvedAt/closedAt and logs REOPENED', async () => {
     const ticket = await createTicket();
-    await api.patch(`/api/tickets/${ticket.id}`).set(...agent.auth).send({ status: 'RESOLVED' });
-    await api.patch(`/api/tickets/${ticket.id}`).set(...agent.auth).send({ status: 'CLOSED' });
+    await api
+      .patch(`/api/tickets/${ticket.id}`)
+      .set(...agent.auth)
+      .send({ status: 'RESOLVED' });
+    await api
+      .patch(`/api/tickets/${ticket.id}`)
+      .set(...agent.auth)
+      .send({ status: 'CLOSED' });
 
     const reopened = await api
       .patch(`/api/tickets/${ticket.id}`)
@@ -225,9 +236,14 @@ describe('GET /api/tickets — list, filter, sort, paginate', () => {
   it('filters by status and paginates with the standard shape', async () => {
     await createTicket({ priority: 'LOW' });
     const t2 = await createTicket({ priority: 'HIGH' });
-    await api.patch(`/api/tickets/${t2.id}`).set(...agent.auth).send({ status: 'IN_PROGRESS' });
+    await api
+      .patch(`/api/tickets/${t2.id}`)
+      .set(...agent.auth)
+      .send({ status: 'IN_PROGRESS' });
 
-    const res = await api.get('/api/tickets?status=IN_PROGRESS&page=1&pageSize=10').set(...agent.auth);
+    const res = await api
+      .get('/api/tickets?status=IN_PROGRESS&page=1&pageSize=10')
+      .set(...agent.auth);
     expect(res.status).toBe(200);
     expect(res.body).toMatchObject({ page: 1, pageSize: 10, total: 1 });
     expect(res.body.data).toHaveLength(1);
@@ -239,10 +255,18 @@ describe('GET /api/tickets — list, filter, sort, paginate', () => {
     await createTicket({ priority: 'MEDIUM' });
 
     const asc = await api.get('/api/tickets?sort=priority').set(...agent.auth);
-    expect(asc.body.data.map((t: { priority: string }) => t.priority)).toEqual(['LOW', 'MEDIUM', 'URGENT']);
+    expect(asc.body.data.map((t: { priority: string }) => t.priority)).toEqual([
+      'LOW',
+      'MEDIUM',
+      'URGENT',
+    ]);
 
     const desc = await api.get('/api/tickets?sort=-priority').set(...agent.auth);
-    expect(desc.body.data.map((t: { priority: string }) => t.priority)).toEqual(['URGENT', 'MEDIUM', 'LOW']);
+    expect(desc.body.data.map((t: { priority: string }) => t.priority)).toEqual([
+      'URGENT',
+      'MEDIUM',
+      'LOW',
+    ]);
   });
 
   it('supports `unassigned=true`', async () => {

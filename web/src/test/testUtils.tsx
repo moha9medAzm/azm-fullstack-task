@@ -12,7 +12,13 @@ export function makeQueryClient() {
   });
 }
 
-export function Providers({ children, initialEntries = ['/'] }: { children: ReactNode; initialEntries?: string[] }) {
+export function Providers({
+  children,
+  initialEntries = ['/'],
+}: {
+  children: ReactNode;
+  initialEntries?: string[];
+}) {
   const client = makeQueryClient();
   return (
     <QueryClientProvider client={client}>
@@ -28,7 +34,9 @@ export function wrapWithProviders(ui: ReactElement, initialEntries?: string[]) {
 }
 
 /** Minimal fetch mock: routes on `${method} ${path}` (path without query string). */
-export function mockFetchOnce(handlers: Record<string, (url: URL) => { status?: number; body?: unknown }>) {
+export function mockFetchOnce(
+  handlers: Record<string, (url: URL) => { status?: number; body?: unknown }>,
+) {
   return vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(typeof input === 'string' ? input : input.toString());
     const method = (init?.method ?? 'GET').toUpperCase();

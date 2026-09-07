@@ -22,9 +22,21 @@ export function DashboardPage() {
 
       <div className="stat-grid">
         <StatCard label="My open tickets" value={data.myOpen} />
-        <StatCard label="Unassigned" value={data.unassigned} tone={data.unassigned > 0 ? 'warn' : 'default'} />
-        <StatCard label="Response SLA breaching" value={data.breachingResponse} tone={data.breachingResponse > 0 ? 'danger' : 'default'} />
-        <StatCard label="Resolution SLA breaching" value={data.breachingResolution} tone={data.breachingResolution > 0 ? 'danger' : 'default'} />
+        <StatCard
+          label="Unassigned"
+          value={data.unassigned}
+          tone={data.unassigned > 0 ? 'warn' : 'default'}
+        />
+        <StatCard
+          label="Response SLA breaching"
+          value={data.breachingResponse}
+          tone={data.breachingResponse > 0 ? 'danger' : 'default'}
+        />
+        <StatCard
+          label="Resolution SLA breaching"
+          value={data.breachingResolution}
+          tone={data.breachingResolution > 0 ? 'danger' : 'default'}
+        />
         <StatCard label="Resolved (7 days)" value={data.resolvedLast7d} />
       </div>
 
@@ -54,14 +66,19 @@ export function DashboardPage() {
         <section className="panel">
           <h2>Breaching SLA soonest</h2>
           {breaching.isLoading && <Spinner />}
-          {breaching.data && breaching.data.data.length === 0 && <p className="muted">Nothing breaching — nice work.</p>}
+          {breaching.data && breaching.data.data.length === 0 && (
+            <p className="muted">Nothing breaching — nice work.</p>
+          )}
           <ul className="ticket-mini-list">
             {breaching.data?.data.map((t) => (
               <li key={t.id}>
                 <Link to={`/tickets/${t.id}`}>
                   {t.reference} — {t.subject}
                 </Link>
-                <span className="muted"> · {titleCase(t.status)} · due {formatRelative(t.slaResolutionDueAt)}</span>
+                <span className="muted">
+                  {' '}
+                  · {titleCase(t.status)} · due {formatRelative(t.slaResolutionDueAt)}
+                </span>
               </li>
             ))}
           </ul>

@@ -13,7 +13,9 @@ describe('GET /api/dashboard/stats', () => {
   it('matches a hand count of seeded/fixture data', async () => {
     const customer = await makeCustomer();
 
-    const create = (overrides: Partial<{ status: string; priority: string; assigneeId: string | null }>) =>
+    const create = (
+      overrides: Partial<{ status: string; priority: string; assigneeId: string | null }>,
+    ) =>
       api
         .post('/api/tickets')
         .set(...agent.auth)
@@ -24,7 +26,10 @@ describe('GET /api/dashboard/stats', () => {
     const t3 = await create({ priority: 'URGENT' });
 
     // Move t3 to RESOLVED so it counts toward resolvedLast7d.
-    await api.patch(`/api/tickets/${t3.body.ticket.id}`).set(...agent.auth).send({ status: 'RESOLVED' });
+    await api
+      .patch(`/api/tickets/${t3.body.ticket.id}`)
+      .set(...agent.auth)
+      .send({ status: 'RESOLVED' });
 
     // Force t1's resolution SLA into the past to count as a breach, without going
     // through the sweep (this test only checks the read-side stats query).

@@ -43,7 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function login(email: string, password: string) {
-    const { token, user } = await api.post<{ token: string; user: User }>('/auth/login', { email, password });
+    const { token, user } = await api.post<{ token: string; user: User }>('/auth/login', {
+      email,
+      password,
+    });
     setToken(token);
     setUser(user);
   }
@@ -53,7 +56,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>
+  );
 }
 
 export function useAuth(): AuthState {

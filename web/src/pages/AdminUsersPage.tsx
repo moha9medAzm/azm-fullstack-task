@@ -103,7 +103,12 @@ export function AdminUsersPage() {
                   <td>
                     <select
                       value={u.role}
-                      onChange={(e) => updateUser.mutate({ id: u.id, role: e.target.value as (typeof ROLES)[number] })}
+                      onChange={(e) =>
+                        updateUser.mutate({
+                          id: u.id,
+                          role: e.target.value as (typeof ROLES)[number],
+                        })
+                      }
                     >
                       {ROLES.map((r) => (
                         <option key={r} value={r}>

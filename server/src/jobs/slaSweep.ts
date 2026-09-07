@@ -22,7 +22,10 @@ export type SlaSweepResult = {
  *    escalated here, the same ticket is excluded from the next run, and its
  *    `slaResolutionDueAt` has also moved out per the new (higher) priority.
  */
-export async function runSlaSweep(opts: { now: Date; client?: PrismaClient }): Promise<SlaSweepResult> {
+export async function runSlaSweep(opts: {
+  now: Date;
+  client?: PrismaClient;
+}): Promise<SlaSweepResult> {
   const client = opts.client ?? prisma;
   const { now } = opts;
 
@@ -61,10 +64,20 @@ export async function runSlaSweep(opts: { now: Date; client?: PrismaClient }): P
       data: { isEscalated: true, priority: newPriority, slaResolutionDueAt },
     });
     await client.ticketEvent.create({
-      data: { ticketId: t.id, type: 'SLA_RESOLUTION_BREACHED', note: 'Resolution SLA target missed — auto-escalated' },
+      data: {
+        ticketId: t.id,
+        type: 'SLA_RESOLUTION_BREACHED',
+        note: 'Resolution SLA target missed — auto-escalated',
+      },
     });
     await client.ticketEvent.create({
-      data: { ticketId: t.id, type: 'ESCALATED', field: 'priority', fromValue: t.priority, toValue: newPriority },
+      data: {
+        ticketId: t.id,
+        type: 'ESCALATED',
+        field: 'priority',
+        fromValue: t.priority,
+        toValue: newPriority,
+      },
     });
     resolutionBreachesEscalated += 1;
   }

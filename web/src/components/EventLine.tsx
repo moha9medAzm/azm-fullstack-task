@@ -31,7 +31,13 @@ function resolveValue(value: string | null, usersById: Map<string, User>): strin
   return usersById.get(value)?.name ?? titleCase(value);
 }
 
-export function EventLine({ event, usersById }: { event: TicketEvent; usersById: Map<string, User> }) {
+export function EventLine({
+  event,
+  usersById,
+}: {
+  event: TicketEvent;
+  usersById: Map<string, User>;
+}) {
   const isPersonRef = event.field === 'assigneeId';
   const from = isPersonRef ? resolveValue(event.fromValue, usersById) : event.fromValue;
   const to = isPersonRef ? resolveValue(event.toValue, usersById) : event.toValue;
@@ -45,7 +51,8 @@ export function EventLine({ event, usersById }: { event: TicketEvent; usersById:
       <div className="event-line-body">
         {event.field && from !== null && to !== null && (
           <span>
-            {FIELD_LABEL[event.field] ?? titleCase(event.field)}: <code>{from ?? '—'}</code> → <code>{to ?? '—'}</code>
+            {FIELD_LABEL[event.field] ?? titleCase(event.field)}: <code>{from ?? '—'}</code> →{' '}
+            <code>{to ?? '—'}</code>
           </span>
         )}
         {event.note && <span>{event.note}</span>}

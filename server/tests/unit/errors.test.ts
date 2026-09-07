@@ -1,12 +1,22 @@
 import { describe, it, expect } from 'vitest';
-import { ValidationError, NotFoundError, ConflictError, ForbiddenError, UnauthenticatedError } from '../../src/lib/errors';
+import {
+  ValidationError,
+  NotFoundError,
+  ConflictError,
+  ForbiddenError,
+  UnauthenticatedError,
+} from '../../src/lib/errors';
 
 describe('AppError subclasses', () => {
   it('ValidationError carries details and the standard shape', () => {
     const err = new ValidationError([{ path: 'email', message: 'Invalid email' }]);
     expect(err.status).toBe(400);
     expect(err.toBody()).toEqual({
-      error: { code: 'VALIDATION_ERROR', message: 'Request validation failed', details: [{ path: 'email', message: 'Invalid email' }] },
+      error: {
+        code: 'VALIDATION_ERROR',
+        message: 'Request validation failed',
+        details: [{ path: 'email', message: 'Invalid email' }],
+      },
     });
   });
 

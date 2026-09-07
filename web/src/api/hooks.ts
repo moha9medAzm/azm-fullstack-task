@@ -26,8 +26,12 @@ export function useUsers() {
 export function useCreateUser() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (input: { name: string; email: string; password: string; role: 'ADMIN' | 'AGENT' }) =>
-      api.post<{ user: User }>('/users', input),
+    mutationFn: (input: {
+      name: string;
+      email: string;
+      password: string;
+      role: 'ADMIN' | 'AGENT';
+    }) => api.post<{ user: User }>('/users', input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }),
   });
 }
@@ -35,8 +39,15 @@ export function useCreateUser() {
 export function useUpdateUser() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...input }: { id: string; name?: string; role?: 'ADMIN' | 'AGENT'; isActive?: boolean }) =>
-      api.patch<{ user: User }>(`/users/${id}`, input),
+    mutationFn: ({
+      id,
+      ...input
+    }: {
+      id: string;
+      name?: string;
+      role?: 'ADMIN' | 'AGENT';
+      isActive?: boolean;
+    }) => api.patch<{ user: User }>(`/users/${id}`, input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['users'] }),
   });
 }
@@ -63,8 +74,13 @@ export function useCustomer(id: string | undefined) {
 export function useCreateCustomer() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (input: { name: string; email: string; phone?: string; company?: string; notes?: string }) =>
-      api.post<{ customer: Customer }>('/customers', input),
+    mutationFn: (input: {
+      name: string;
+      email: string;
+      phone?: string;
+      company?: string;
+      notes?: string;
+    }) => api.post<{ customer: Customer }>('/customers', input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['customers'] }),
   });
 }
@@ -72,8 +88,12 @@ export function useCreateCustomer() {
 export function useUpdateCustomer() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...input }: { id: string } & Partial<Pick<Customer, 'name' | 'email' | 'phone' | 'company' | 'notes'>>) =>
-      api.patch<{ customer: Customer }>(`/customers/${id}`, input),
+    mutationFn: ({
+      id,
+      ...input
+    }: { id: string } & Partial<
+      Pick<Customer, 'name' | 'email' | 'phone' | 'company' | 'notes'>
+    >) => api.patch<{ customer: Customer }>(`/customers/${id}`, input),
     onSuccess: (_data, vars) => {
       qc.invalidateQueries({ queryKey: ['customers'] });
       qc.invalidateQueries({ queryKey: ['customers', vars.id] });
@@ -110,7 +130,11 @@ export type TicketListQuery = {
 export function useTickets(query: TicketListQuery) {
   return useQuery({
     queryKey: ['tickets', query],
-    queryFn: () => api.get<Paginated<Ticket>>('/tickets', query as Record<string, string | number | boolean | undefined>),
+    queryFn: () =>
+      api.get<Paginated<Ticket>>(
+        '/tickets',
+        query as Record<string, string | number | boolean | undefined>,
+      ),
     placeholderData: (prev) => prev,
   });
 }
@@ -182,7 +206,8 @@ export function useUpdateTicket(id: string) {
 export function useAssignTicket(id: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (assigneeId: string | null) => api.post<{ ticket: Ticket }>(`/tickets/${id}/assign`, { assigneeId }),
+    mutationFn: (assigneeId: string | null) =>
+      api.post<{ ticket: Ticket }>(`/tickets/${id}/assign`, { assigneeId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['tickets', id] });
       qc.invalidateQueries({ queryKey: ['tickets', id, 'events'] });

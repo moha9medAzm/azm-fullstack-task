@@ -29,10 +29,7 @@ export function isTransitionAllowed(from: TicketStatus, to: TicketStatus): boole
 /** Throws `ConflictError('INVALID_TRANSITION', …)` when the move isn't legal. */
 export function assertTransition(from: TicketStatus, to: TicketStatus): void {
   if (!isTransitionAllowed(from, to)) {
-    throw new ConflictError(
-      'INVALID_TRANSITION',
-      `Cannot move a ticket from ${from} to ${to}`,
-    );
+    throw new ConflictError('INVALID_TRANSITION', `Cannot move a ticket from ${from} to ${to}`);
   }
 }
 

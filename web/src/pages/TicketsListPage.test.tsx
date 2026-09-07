@@ -26,7 +26,9 @@ function fetchMock(ticketsForStatus: Record<string, unknown[]>) {
   return vi.fn(async (input: RequestInfo | URL) => {
     const url = new URL(typeof input === 'string' ? input : input.toString());
     if (url.pathname === '/api/users') {
-      return new Response(JSON.stringify({ data: [] }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ data: [] }), {
+        headers: { 'content-type': 'application/json' },
+      });
     }
     if (url.pathname === '/api/tickets') {
       const status = url.searchParams.get('status') ?? 'ALL';
@@ -53,7 +55,15 @@ describe('TicketsListPage', () => {
   it('refetches with a status filter when the status select changes', async () => {
     globalThis.fetch = fetchMock({
       ALL: [baseTicket],
-      RESOLVED: [{ ...baseTicket, id: 't2', reference: 'TKT-0002', subject: 'Already fixed', status: 'RESOLVED' }],
+      RESOLVED: [
+        {
+          ...baseTicket,
+          id: 't2',
+          reference: 'TKT-0002',
+          subject: 'Already fixed',
+          status: 'RESOLVED',
+        },
+      ],
     });
 
     render(<TicketsListPage />, { wrapper: ({ children }) => <Providers>{children}</Providers> });

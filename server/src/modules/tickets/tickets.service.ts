@@ -1,10 +1,19 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../db/prisma';
 import { NotFoundError, ValidationError } from '../../lib/errors';
-import { computeSlaDueDates, recomputeSlaOnPriorityChange, bumpPriority, deriveSlaFields } from '../../lib/sla';
+import {
+  computeSlaDueDates,
+  recomputeSlaOnPriorityChange,
+  bumpPriority,
+  deriveSlaFields,
+} from '../../lib/sla';
 import { assertTransition, isReopen } from './transitions';
 import type { TicketPriority } from '../../types/enums';
-import type { createTicketSchema, updateTicketSchema, listTicketsQuerySchema } from './tickets.schemas';
+import type {
+  createTicketSchema,
+  updateTicketSchema,
+  listTicketsQuerySchema,
+} from './tickets.schemas';
 import type { z } from 'zod';
 
 type Tx = Prisma.TransactionClient | PrismaClient;
@@ -16,13 +25,15 @@ export const ticketInclude = {
   createdBy: { select: { id: true, name: true, email: true, role: true } },
 } satisfies Prisma.TicketInclude;
 
-type TicketWithRelations = Prisma.TicketGetPayload<{ include: typeof ticketInclude }>;
-
 /** Attach derived, never-persisted SLA fields for API responses. */
-export function attachDerived<T extends { slaResponseDueAt: Date; slaResolutionDueAt: Date; firstRespondedAt: Date | null; resolvedAt: Date | null }>(
-  ticket: T,
-  now = new Date(),
-) {
+export function attachDerived<
+  T extends {
+    slaResponseDueAt: Date;
+    slaResolutionDueAt: Date;
+    firstRespondedAt: Date | null;
+    resolvedAt: Date | null;
+  },
+>(ticket: T, now = new Date()) {
   return { ...ticket, ...deriveSlaFields(now, ticket) };
 }
 
@@ -54,7 +65,10 @@ export async function createTicket(input: z.infer<typeof createTicketSchema>, ac
   if (input.assigneeId) await assertActiveUser(prisma, input.assigneeId);
 
   const now = new Date();
-  const { slaResponseDueAt, slaResolutionDueAt } = computeSlaDueDates(input.priority as TicketPriority, now);
+  const { slaResponseDueAt, slaResolutionDueAt } = computeSlaDueDates(
+    input.priority as TicketPriority,
+    now,
+  );
 
   return prisma.$transaction(async (tx) => {
     const reference = await nextReference(tx);
@@ -99,8 +113,14 @@ export async function getTicketFull(id: string) {
     where: { id },
     include: {
       ...ticketInclude,
-      comments: { orderBy: { createdAt: 'asc' }, include: { author: { select: { id: true, name: true } } } },
-      events: { orderBy: { createdAt: 'desc' }, include: { actor: { select: { id: true, name: true } } } },
+      comments: {
+        orderBy: { createdAt: 'asc' },
+        include: { author: { select: { id: true, name: true } } },
+      },
+      events: {
+        orderBy: { createdAt: 'desc' },
+        include: { actor: { select: { id: true, name: true } } },
+      },
     },
   });
   if (!ticket) throw new NotFoundError('Ticket');
@@ -118,10 +138,7 @@ export async function getTicketEvents(id: string) {
 
 const PRIORITY_RANK: Record<string, number> = { LOW: 0, MEDIUM: 1, HIGH: 2, URGENT: 3 };
 
-export async function listTickets(
-  query: z.infer<typeof listTicketsQuerySchema>,
-  actor: Actor,
-) {
+export async function listTickets(query: z.infer<typeof listTicketsQuerySchema>, actor: Actor) {
   const now = new Date();
   const where: Prisma.TicketWhereInput = {};
 
@@ -174,7 +191,12 @@ export async function listTickets(
       }),
       prisma.ticket.count({ where }),
     ]);
-    return { data: rows.map((t) => attachDerived(t, now)), page: query.page, pageSize: query.pageSize, total };
+    return {
+      data: rows.map((t) => attachDerived(t, now)),
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+    };
   }
 
   // Priority has no natural SQL ordering as a string column — sort in memory.
@@ -192,7 +214,12 @@ export async function listTickets(
   });
   const total = sorted.length;
   const page = sorted.slice((query.page - 1) * query.pageSize, query.page * query.pageSize);
-  return { data: page.map((t) => attachDerived(t, now)), page: query.page, pageSize: query.pageSize, total };
+  return {
+    data: page.map((t) => attachDerived(t, now)),
+    page: query.page,
+    pageSize: query.pageSize,
+    total,
+  };
 }
 
 export async function updateTicket(
@@ -270,7 +297,11 @@ export async function updateTicket(
         });
       }
 
-      if (existing.status === 'OPEN' && patch.status === 'IN_PROGRESS' && !existing.firstRespondedAt) {
+      if (
+        existing.status === 'OPEN' &&
+        patch.status === 'IN_PROGRESS' &&
+        !existing.firstRespondedAt
+      ) {
         data.firstRespondedAt = now;
       }
     }
@@ -301,7 +332,10 @@ export async function updateTicket(
     }
 
     if (Object.keys(data).length === 0) {
-      const unchanged = await tx.ticket.findUniqueOrThrow({ where: { id }, include: ticketInclude });
+      const unchanged = await tx.ticket.findUniqueOrThrow({
+        where: { id },
+        include: ticketInclude,
+      });
       return attachDerived(unchanged, now);
     }
 
@@ -316,7 +350,9 @@ export async function updateTicket(
 export async function assignTicket(id: string, assigneeId: string | null, actor: Actor) {
   const existing = await getOr404(prisma, id);
   if (existing.assigneeId === assigneeId) {
-    return attachDerived(await prisma.ticket.findUniqueOrThrow({ where: { id }, include: ticketInclude }));
+    return attachDerived(
+      await prisma.ticket.findUniqueOrThrow({ where: { id }, include: ticketInclude }),
+    );
   }
 
   return prisma.$transaction(async (tx) => {
@@ -370,7 +406,11 @@ export async function escalateTicket(id: string, actor: Actor) {
   });
 }
 
-export async function addComment(id: string, input: { body: string; isInternal: boolean }, actor: Actor) {
+export async function addComment(
+  id: string,
+  input: { body: string; isInternal: boolean },
+  actor: Actor,
+) {
   const existing = await getOr404(prisma, id);
 
   return prisma.$transaction(async (tx) => {

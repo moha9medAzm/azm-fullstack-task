@@ -2,7 +2,7 @@
   "name": "customer-support-crm",
   "version": "0.1.0",
   "private": true,
-  "description": "Customer Support CRM (MVP: core ticketing) — see SPEC.md / PLAN.md",
+  "description": "Customer Support CRM (MVP: core ticketing) — see specs/",
   "workspaces": [
     "server",
     "web"
@@ -15,12 +15,22 @@
     "typecheck": "npm run typecheck --workspace server && npm run typecheck --workspace web",
     "test": "npm run test --workspace server",
     "test:web": "npm run test --workspace web",
+    "lint": "eslint \"server/src/**/*.ts\" \"server/tests/**/*.ts\" \"web/src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"server/src/**/*.ts\" \"server/tests/**/*.ts\" \"server/prisma/*.ts\" \"web/src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"server/src/**/*.ts\" \"server/tests/**/*.ts\" \"server/prisma/*.ts\" \"web/src/**/*.{ts,tsx,css}\"",
     "db:migrate": "npm run db:migrate --workspace server",
     "db:reset": "npm run db:reset --workspace server",
     "seed": "npm run seed --workspace server"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3"
   },
   "engines": {
     "node": ">=18.13"

@@ -6,8 +6,11 @@ role-based access control, request validation, an immutable audit log, backgroun
 SLA automation, a test suite, and a React agent console.
 
 - **How to run it (step-by-step + troubleshooting):** [RUNNING.md](RUNNING.md)
-- **Requirements, assumptions, API contract, acceptance criteria:** [SPEC.md](SPEC.md)
-- **Architecture and the task-by-task build plan:** [PLAN.md](PLAN.md)
+- **Full spec-driven-development package** (requirements with EARS acceptance
+  criteria, design, task plan, **traceability matrix**, AI-usage notes, ADRs):
+  [`specs/`](specs/) — start at [specs/README.md](specs/README.md)
+- **Security posture:** [SECURITY.md](SECURITY.md)
+- Short pointers: [SPEC.md](SPEC.md) · [PLAN.md](PLAN.md)
 
 The product brief lists 12 feature areas; this MVP deliberately implements 5 of them
 well rather than all 12 shallowly. See [What's intentionally out of scope](#whats-intentionally-out-of-scope).
@@ -94,7 +97,8 @@ Run from the repo root:
 
 ```
 fullstack-task/
-├── SPEC.md  PLAN.md                     specification + build plan
+├── specs/                              spec-driven-development package (requirements, design, traceability, ADRs)
+├── SPEC.md  PLAN.md                     short pointers into specs/
 ├── server/
 │   ├── prisma/
 │   │   ├── schema.prisma                data model (SQLite)
@@ -120,7 +124,7 @@ fullstack-task/
         └── pages/        Login, Dashboard, Tickets(List|New|Detail), Customers(List|Detail), AdminUsers
 ```
 
-**Design decisions (rationale in [PLAN.md](PLAN.md) §1):**
+**Design decisions (rationale in [specs/02-design.md](specs/02-design.md) and [specs/adr/](specs/adr/)):**
 
 - **App factory** — `createApp()` returns the Express app with no `listen()`, so
   Supertest drives the real router in-process.
@@ -177,7 +181,7 @@ Illegal moves (e.g. `OPEN → CLOSED`) return `409 INVALID_TRANSITION`.
 ## API summary
 
 Base path `/api`. All routes except `/auth/login` and `/health` require
-`Authorization: Bearer <jwt>`. Full contract in [SPEC.md](SPEC.md) §5.
+`Authorization: Bearer <jwt>`. Full contract in [specs/02-design.md §6](specs/02-design.md#6-api-contract).
 
 | Method | Path                       | Role         | Purpose                                        |
 |--------|----------------------------|--------------|------------------------------------------------|
@@ -214,8 +218,7 @@ npm run test:web # web: 6 tests (React Testing Library)
 **Server** — unit tests cover the pure core (SLA math with frozen clock and
 boundary cases, status-transition matrix, RBAC decision, error mapping).
 Integration tests run against a fresh temporary SQLite database (`migrate deploy`
-in `globalSetup`, table wipe between tests) and cover the [SPEC.md](SPEC.md) §9
-acceptance checklist: login success/failure/deactivated, the standard 400/401/403/
+in `globalSetup`, table wipe between tests) and cover the [acceptance checklist](specs/04-acceptance-criteria.md): login success/failure/deactivated, the standard 400/401/403/
 404/409 shapes, customer delete-guard, ticket creation SLA, first-response
 stamping, priority-change SLA recompute + event, illegal transitions, escalation,
 assignment auditing, list filter/sort/pagination, dashboard stat math, and the
@@ -248,7 +251,7 @@ tickets → ticket detail → customers → users) with no console errors.
 
 ## What's intentionally out of scope
 
-Firm MVP boundaries (any one is a viable follow-up milestone — see [SPEC.md](SPEC.md) §1):
+Firm MVP boundaries (any one is a viable follow-up milestone — see [specs/07-assumptions-and-scope.md](specs/07-assumptions-and-scope.md)):
 
 - **Communication channels** — `channel` is a field on the ticket for realism, but
   there is **no** outbound email / WhatsApp / SMS / live-chat integration.
@@ -265,7 +268,7 @@ Firm MVP boundaries (any one is a viable follow-up milestone — see [SPEC.md](S
 
 ## How AI was used on this task
 
-- Drafted [SPEC.md](SPEC.md) and [PLAN.md](PLAN.md) first, scoping 12 feature areas
+- Drafted the [`specs/`](specs/) requirements and design first, scoping 12 feature areas
   down to a coherent, testable core and writing explicit assumptions + acceptance
   criteria before any code.
 - Generated implementation in the planned order, keeping business logic in pure,

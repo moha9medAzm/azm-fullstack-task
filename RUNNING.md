@@ -2,7 +2,7 @@
 
 A step-by-step runbook: local development, a production-style build, the test
 suites, and troubleshooting. For _what the app is_ and _how it's designed_, see
-[README.md](README.md), [SPEC.md](SPEC.md), and [PLAN.md](PLAN.md).
+[README.md](README.md) and the [`specs/`](specs/) folder.
 
 ---
 

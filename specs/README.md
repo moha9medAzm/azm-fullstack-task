@@ -17,6 +17,7 @@ verified_.
 | [05-traceability-matrix.md](05-traceability-matrix.md) | `REQ-*` → backend file → frontend file → test → status. Proves nothing is missing on either side | Correctness · Ownership |
 | [06-ai-usage-and-verification.md](06-ai-usage-and-verification.md) | How AI was prompted, how output was reviewed, what was corrected, safe-usage practices | AI Usage & Verification |
 | [07-assumptions-and-scope.md](07-assumptions-and-scope.md) | In/out of scope, every assumption made, and the decision log | Requirement & Specification · Ownership |
+| [08-walkthrough.md](08-walkthrough.md) | Guided tour of every component (backend + frontend), the process, the domain rules, and a presentation script | orientation / all rows |
 | [adr/](adr/) | Architecture Decision Records — one per significant technical choice, with alternatives considered | Technical Understanding & Ownership |
 
 ## The process that produced this
